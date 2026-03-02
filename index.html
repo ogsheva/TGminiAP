@@ -2,229 +2,523 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Покупка монет</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Пополнение</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0f0f10;
-  --card:#1c1c1f;
-  --accent:#2ea6ff;
-  --text:#fff;
-  --muted:#9b9b9b;
-  --radius:16px;
+:root {
+  --bg: #08080a;
+  --surface: #111115;
+  --surface2: #1a1a20;
+  --accent: #c8a0ff;
+  --accent2: #ff6eb4;
+  --gold: #ffd166;
+  --text: #f0eeff;
+  --muted: #6b6880;
+  --r: 18px;
 }
 
-*{box-sizing:border-box;font-family:system-ui}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  padding:16px;
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 40px;
 }
 
-/* язык */
-.lang{
-  position:fixed;
-  top:12px;
-  right:12px;
-}
-select{
-  background:var(--card);
-  color:white;
-  border:none;
-  border-radius:10px;
-  padding:6px 10px;
+/* Background glow */
+body::before {
+  content: '';
+  position: fixed;
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 500px;
+  background: radial-gradient(ellipse, rgba(200,160,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* верх */
-.top{
-  text-align:center;
-  margin-top:30px;
+.wrap { position: relative; z-index: 1; padding: 0 16px; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 28px 0 20px;
 }
-.main-icon{
-  width:90px;
+.header .icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 14px;
+  box-shadow: 0 0 40px rgba(200,160,255,0.3);
 }
-h1{
-  margin:10px 0 6px;
+.header h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-.subtitle{
-  color:var(--muted);
-  font-size:14px;
+.header p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
 }
 
-/* пакеты */
-.pack{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:16px;
-  margin-top:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  cursor:pointer;
-  border:2px solid transparent;
+/* Balance bar */
+.balance-bar {
+  background: var(--surface);
+  border: 1px solid rgba(200,160,255,0.12);
+  border-radius: var(--r);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
-.pack.active{
-  border-color:var(--accent);
+.balance-bar .label { font-size: 13px; color: var(--muted); }
+.balance-bar .val {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold);
 }
-.pack-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.radio{
-  width:20px;height:20px;
-  border:2px solid var(--muted);
-  border-radius:50%;
-}
-.pack.active .radio{
-  border-color:var(--accent);
-  background:var(--accent);
-}
-.pack-title{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.coin{
-  width:20px;
+.balance-bar .val span { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 4px; }
+
+/* Section label */
+.sec-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
 }
 
-/* оплата */
-.section{
-  margin-top:20px;
+/* Packs */
+.packs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+
+.pack {
+  background: var(--surface);
+  border: 1.5px solid rgba(255,255,255,0.06);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.1s;
+  position: relative;
+  overflow: hidden;
 }
-.payments{
-  display:flex;
-  gap:10px;
+.pack::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(200,160,255,0.04), transparent);
+  opacity: 0;
+  transition: opacity 0.18s;
 }
-.pay{
-  flex:1;
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:14px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  cursor:pointer;
-  border:2px solid transparent;
+.pack.active {
+  border-color: var(--accent);
+  background: rgba(200,160,255,0.07);
 }
-.pay.active{
-  border-color:var(--accent);
-}
-.pay img{
-  width:22px;
+.pack.active::before { opacity: 1; }
+.pack:active { transform: scale(0.98); }
+
+/* Popular badge */
+.pack.popular::after {
+  content: 'ХИТ';
+  position: absolute;
+  top: 8px; right: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 6px;
 }
 
-/* чекбокс */
-.agree{
-  margin-top:20px;
-  display:flex;
-  gap:8px;
-  font-size:13px;
-  color:var(--muted);
+.radio-dot {
+  width: 20px; height: 20px;
+  border: 2px solid var(--muted);
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.18s;
+}
+.pack.active .radio-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.pack.active .radio-dot::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: white;
+  border-radius: 50%;
 }
 
-/* кнопка */
-button{
-  width:100%;
-  margin-top:20px;
-  padding:18px;
-  border:none;
-  border-radius:var(--radius);
-  background:var(--accent);
-  color:white;
-  font-size:17px;
+.pack-info { flex: 1; }
+.pack-name {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-button:disabled{
-  opacity:.5;
+.pack-name .coin-emoji { font-size: 16px; }
+.pack-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
 }
+.pack-sub.discount { color: #4ecb71; }
+
+.pack-price {
+  text-align: right;
+}
+.pack-price .stars {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+.pack-price .usd {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* Payment methods */
+.methods { display: flex; gap: 8px; margin-bottom: 24px; }
+.method {
+  flex: 1;
+  background: var(--surface);
+  border: 1.5px solid rgba(255,255,255,0.06);
+  border-radius: var(--r);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.1s;
+}
+.method.active {
+  border-color: var(--accent);
+  background: rgba(200,160,255,0.07);
+}
+.method:active { transform: scale(0.97); }
+.method .m-icon { font-size: 24px; }
+.method .m-name { font-size: 12px; font-weight: 500; }
+.method .m-desc { font-size: 10px; color: var(--muted); text-align: center; }
+
+/* Terms */
+.terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.custom-check {
+  width: 20px; height: 20px;
+  border: 2px solid var(--muted);
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+  margin-top: 1px;
+}
+.custom-check.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.custom-check.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+.terms-text {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.terms-text a { color: var(--accent); text-decoration: none; }
+
+/* Pay button */
+.pay-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: var(--r);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 8px 30px rgba(200,160,255,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.pay-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.15);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.pay-btn:not(:disabled):hover::before { opacity: 1; }
+.pay-btn:not(:disabled):active { transform: scale(0.98); }
+.pay-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Loading state */
+.pay-btn.loading::after {
+  content: '';
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Fade in */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.wrap > * {
+  animation: fadeUp 0.4s ease both;
+}
+.header        { animation-delay: 0.0s; }
+.balance-bar   { animation-delay: 0.05s; }
+.sec-label:nth-of-type(1) { animation-delay: 0.1s; }
+.packs         { animation-delay: 0.12s; }
+.sec-label:nth-of-type(2) { animation-delay: 0.18s; }
+.methods       { animation-delay: 0.2s; }
+.terms-row     { animation-delay: 0.25s; }
+.pay-btn       { animation-delay: 0.28s; }
 </style>
 </head>
-
 <body>
 
-<!-- язык -->
-<div class="lang">
-  <select>
-    <option>RU ₽</option>
-    <option>EN $</option>
-  </select>
-</div>
+<div class="wrap">
 
-<!-- верх -->
-<div class="top">
-  <!-- БАБОЧКА -->
-  <img src="butterfly.png" class="main-icon">
-  <h1>Покупка монет</h1>
-  <div class="subtitle">Больше монет — больше скидка!</div>
-</div>
-
-<!-- пакеты -->
-<div id="packs">
-
-  <!-- КАЖДАЯ МОНЕТКА ИСПОЛЬЗУЕТ coin.webp -->
-  <div class="pack active">
-    <div class="pack-left">
-      <div class="radio"></div>
-      <div class="pack-title">
-        <img src="coin.webp" class="coin">
-        <span>50 монет</span>
-      </div>
-    </div>
-    <div>299₽</div>
+  <!-- Header -->
+  <div class="header">
+    <div class="icon">🪙</div>
+    <h1>Пополнение баланса</h1>
+    <p>Больше монет — больше возможностей</p>
   </div>
 
-  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>95 монет</span></div></div><div>549₽</div></div>
-  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>230 монет</span></div></div><div>1275₽</div></div>
-  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>660 монет</span></div></div><div>3450₽</div></div>
-  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>970 монет</span></div></div><div>4950₽</div></div>
-  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>1790 монет</span></div></div><div>8950₽</div></div>
+  <!-- Balance -->
+  <div class="balance-bar">
+    <span class="label">Текущий баланс</span>
+    <span class="val" id="balanceVal">0 <span>монет</span></span>
+  </div>
+
+  <!-- Packs -->
+  <div class="sec-label">Выберите пакет</div>
+  <div class="packs" id="packs">
+
+    <div class="pack active" data-id="pack_10" data-credits="10" data-stars="99">
+      <div class="radio-dot"></div>
+      <div class="pack-info">
+        <div class="pack-name"><span class="coin-emoji">🪙</span> 10 монет</div>
+        <div class="pack-sub">~1 генерация фото</div>
+      </div>
+      <div class="pack-price">
+        <div class="stars">⭐ 99</div>
+        <div class="usd">~$1.30</div>
+      </div>
+    </div>
+
+    <div class="pack popular" data-id="pack_25" data-credits="25" data-stars="229">
+      <div class="radio-dot"></div>
+      <div class="pack-info">
+        <div class="pack-name"><span class="coin-emoji">🪙</span> 25 монет</div>
+        <div class="pack-sub discount">Экономия 8%</div>
+      </div>
+      <div class="pack-price">
+        <div class="stars">⭐ 229</div>
+        <div class="usd">~$2.98</div>
+      </div>
+    </div>
+
+    <div class="pack" data-id="pack_60" data-credits="60" data-stars="499">
+      <div class="radio-dot"></div>
+      <div class="pack-info">
+        <div class="pack-name"><span class="coin-emoji">🪙</span> 60 монет</div>
+        <div class="pack-sub discount">Экономия 16%</div>
+      </div>
+      <div class="pack-price">
+        <div class="stars">⭐ 499</div>
+        <div class="usd">~$6.49</div>
+      </div>
+    </div>
+
+    <div class="pack" data-id="pack_150" data-credits="150" data-stars="1099">
+      <div class="radio-dot"></div>
+      <div class="pack-info">
+        <div class="pack-name"><span class="coin-emoji">🪙</span> 150 монет</div>
+        <div class="pack-sub discount">Экономия 27%</div>
+      </div>
+      <div class="pack-price">
+        <div class="stars">⭐ 1099</div>
+        <div class="usd">~$14.29</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Payment methods -->
+  <div class="sec-label">Способ оплаты</div>
+  <div class="methods">
+    <div class="method active" data-method="stars">
+      <span class="m-icon">⭐</span>
+      <span class="m-name">Telegram Stars</span>
+      <span class="m-desc">Мгновенно</span>
+    </div>
+    <div class="method" data-method="crypto">
+      <span class="m-icon">💎</span>
+      <span class="m-name">CryptoBot</span>
+      <span class="m-desc">USDT / BTC</span>
+    </div>
+  </div>
+
+  <!-- Terms -->
+  <label class="terms-row" id="termsRow">
+    <div class="custom-check" id="checkBox"></div>
+    <span class="terms-text">
+      Я принимаю <a href="#">условия использования</a> и подтверждаю, что мне исполнилось 18 лет
+    </span>
+  </label>
+
+  <!-- Pay button -->
+  <button class="pay-btn" id="payBtn" disabled>Оплатить</button>
 
 </div>
-
-<!-- оплата -->
-<div class="section">Способ оплаты</div>
-<div class="payments">
-  <div class="pay active"><img src="stars.webp">Telegram Stars</div>
-  <div class="pay"><img src="crypto.webp">CryptoBot</div>
-</div>
-
-<!-- согласие -->
-<label class="agree">
-  <input type="checkbox" id="agree">
-  Я принимаю условия
-</label>
-
-<button id="pay" disabled>Оплатить</button>
 
 <script>
 const tg = window.Telegram.WebApp;
 tg.ready();
 tg.expand();
 
-document.querySelectorAll('.pack').forEach(p=>{
-  p.onclick=()=>{
-    document.querySelectorAll('.pack').forEach(x=>x.classList.remove('active'));
+// Подставляем баланс из параметров URL (?balance=42)
+const urlParams = new URLSearchParams(window.location.search);
+const balance = urlParams.get('balance') || '0';
+document.getElementById('balanceVal').innerHTML = `${balance} <span>монет</span>`;
+
+// Состояние — первый пакет выбран по умолчанию
+let selectedPack = { id: 'pack_10', credits: '10', stars: '99' };
+let selectedMethod = 'stars';
+let agreed = false;
+
+// Пакеты
+document.querySelectorAll('.pack').forEach(p => {
+  p.onclick = () => {
+    document.querySelectorAll('.pack').forEach(x => x.classList.remove('active'));
     p.classList.add('active');
-  }
+    selectedPack = { id: p.dataset.id, credits: p.dataset.credits, stars: p.dataset.stars };
+    updateBtn();
+  };
 });
 
-document.querySelectorAll('.pay').forEach(p=>{
-  p.onclick=()=>{
-    document.querySelectorAll('.pay').forEach(x=>x.classList.remove('active'));
-    p.classList.add('active');
-  }
+// Методы оплаты
+document.querySelectorAll('.method').forEach(m => {
+  m.onclick = () => {
+    document.querySelectorAll('.method').forEach(x => x.classList.remove('active'));
+    m.classList.add('active');
+    selectedMethod = m.dataset.method;
+    updateBtn();
+  };
 });
 
-document.getElementById('agree').onchange=e=>{
-  document.getElementById('pay').disabled=!e.target.checked;
+// Чекбокс
+document.getElementById('termsRow').onclick = () => {
+  agreed = !agreed;
+  const box = document.getElementById('checkBox');
+  box.classList.toggle('checked', agreed);
+  updateBtn();
 };
-</script>
 
+// Кнопка оплаты
+function updateBtn() {
+  const btn = document.getElementById('payBtn');
+  const ready = agreed;  // пакет всегда выбран
+  btn.disabled = !ready;
+  if (ready) {
+    const label = selectedMethod === 'stars'
+      ? `Оплатить ⭐ ${selectedPack.stars}`
+      : `Оплатить 💎 USDT`;
+    btn.textContent = label;
+  } else {
+    btn.textContent = 'Оплатить';
+  }
+}
+
+document.getElementById('payBtn').onclick = () => {
+  if (!selectedPack || !agreed) return;
+
+  const btn = document.getElementById('payBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  // Отправляем данные боту — бот получит это в web_app_data handler
+  const data = JSON.stringify({
+    action: 'topup',
+    pack_id: selectedPack.id,
+    method: selectedMethod,
+    credits: selectedPack.credits,
+    stars: selectedPack.stars,
+  });
+
+  tg.sendData(data);
+};
+
+// Инициализация
+updateBtn();
+
+// Установить тему под Telegram
+if (tg.colorScheme === 'light') {
+  document.documentElement.style.setProperty('--bg', '#f5f5f7');
+  document.documentElement.style.setProperty('--surface', '#ffffff');
+  document.documentElement.style.setProperty('--text', '#1a1a2e');
+  document.documentElement.style.setProperty('--muted', '#888');
+  document.documentElement.style.setProperty('--surface2', '#ebebef');
+}
+</script>
 </body>
 </html>
