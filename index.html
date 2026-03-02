@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Покупка монет</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+:root{
+  --bg:#0f0f10;
+  --card:#1c1c1f;
+  --accent:#2ea6ff;
+  --text:#fff;
+  --muted:#9b9b9b;
+  --radius:16px;
+}
+
+*{box-sizing:border-box;font-family:system-ui}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  padding:16px;
+}
+
+/* язык */
+.lang{
+  position:fixed;
+  top:12px;
+  right:12px;
+}
+select{
+  background:var(--card);
+  color:white;
+  border:none;
+  border-radius:10px;
+  padding:6px 10px;
+}
+
+/* верх */
+.top{
+  text-align:center;
+  margin-top:30px;
+}
+.main-icon{
+  width:90px;
+}
+h1{
+  margin:10px 0 6px;
+}
+.subtitle{
+  color:var(--muted);
+  font-size:14px;
+}
+
+/* пакеты */
+.pack{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-top:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.pack.active{
+  border-color:var(--accent);
+}
+.pack-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.radio{
+  width:20px;height:20px;
+  border:2px solid var(--muted);
+  border-radius:50%;
+}
+.pack.active .radio{
+  border-color:var(--accent);
+  background:var(--accent);
+}
+.pack-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.coin{
+  width:20px;
+}
+
+/* оплата */
+.section{
+  margin-top:20px;
+}
+.payments{
+  display:flex;
+  gap:10px;
+}
+.pay{
+  flex:1;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:14px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.pay.active{
+  border-color:var(--accent);
+}
+.pay img{
+  width:22px;
+}
+
+/* чекбокс */
+.agree{
+  margin-top:20px;
+  display:flex;
+  gap:8px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* кнопка */
+button{
+  width:100%;
+  margin-top:20px;
+  padding:18px;
+  border:none;
+  border-radius:var(--radius);
+  background:var(--accent);
+  color:white;
+  font-size:17px;
+}
+button:disabled{
+  opacity:.5;
+}
+</style>
+</head>
+
+<body>
+
+<!-- язык -->
+<div class="lang">
+  <select>
+    <option>RU ₽</option>
+    <option>EN $</option>
+  </select>
+</div>
+
+<!-- верх -->
+<div class="top">
+  <!-- БАБОЧКА -->
+  <img src="butterfly.png" class="main-icon">
+  <h1>Покупка монет</h1>
+  <div class="subtitle">Больше монет — больше скидка!</div>
+</div>
+
+<!-- пакеты -->
+<div id="packs">
+
+  <!-- КАЖДАЯ МОНЕТКА ИСПОЛЬЗУЕТ coin.webp -->
+  <div class="pack active">
+    <div class="pack-left">
+      <div class="radio"></div>
+      <div class="pack-title">
+        <img src="coin.webp" class="coin">
+        <span>50 монет</span>
+      </div>
+    </div>
+    <div>299₽</div>
+  </div>
+
+  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>95 монет</span></div></div><div>549₽</div></div>
+  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>230 монет</span></div></div><div>1275₽</div></div>
+  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>660 монет</span></div></div><div>3450₽</div></div>
+  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>970 монет</span></div></div><div>4950₽</div></div>
+  <div class="pack"><div class="pack-left"><div class="radio"></div><div class="pack-title"><img src="coin.webp" class="coin"><span>1790 монет</span></div></div><div>8950₽</div></div>
+
+</div>
+
+<!-- оплата -->
+<div class="section">Способ оплаты</div>
+<div class="payments">
+  <div class="pay active"><img src="stars.webp">Telegram Stars</div>
+  <div class="pay"><img src="crypto.webp">CryptoBot</div>
+</div>
+
+<!-- согласие -->
+<label class="agree">
+  <input type="checkbox" id="agree">
+  Я принимаю условия
+</label>
+
+<button id="pay" disabled>Оплатить</button>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+
+document.querySelectorAll('.pack').forEach(p=>{
+  p.onclick=()=>{
+    document.querySelectorAll('.pack').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+  }
+});
+
+document.querySelectorAll('.pay').forEach(p=>{
+  p.onclick=()=>{
+    document.querySelectorAll('.pay').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+  }
+});
+
+document.getElementById('agree').onchange=e=>{
+  document.getElementById('pay').disabled=!e.target.checked;
+};
+</script>
+
+</body>
+</html>
