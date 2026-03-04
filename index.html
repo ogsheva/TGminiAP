@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Пополнение</title>
+<title>Поповнення</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -30,7 +30,6 @@ body {
   padding-bottom: 40px;
 }
 
-/* Background glow */
 body::before {
   content: '';
   position: fixed;
@@ -137,9 +136,8 @@ body::before {
 .pack.active::before { opacity: 1; }
 .pack:active { transform: scale(0.98); }
 
-/* Popular badge */
 .pack.popular::after {
-  content: 'ХИТ';
+  content: 'ХІТ';
   position: absolute;
   top: 8px; right: 8px;
   background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -186,9 +184,7 @@ body::before {
 }
 .pack-sub.discount { color: #4ecb71; }
 
-.pack-price {
-  text-align: right;
-}
+.pack-price { text-align: right; }
 .pack-price .stars {
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
@@ -300,7 +296,6 @@ body::before {
   box-shadow: none;
 }
 
-/* Loading state */
 .pay-btn.loading::after {
   content: '';
   width: 18px; height: 18px;
@@ -314,19 +309,14 @@ body::before {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Fade in */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.wrap > * {
-  animation: fadeUp 0.4s ease both;
-}
+.wrap > * { animation: fadeUp 0.4s ease both; }
 .header        { animation-delay: 0.0s; }
 .balance-bar   { animation-delay: 0.05s; }
-.sec-label:nth-of-type(1) { animation-delay: 0.1s; }
 .packs         { animation-delay: 0.12s; }
-.sec-label:nth-of-type(2) { animation-delay: 0.18s; }
 .methods       { animation-delay: 0.2s; }
 .terms-row     { animation-delay: 0.25s; }
 .pay-btn       { animation-delay: 0.28s; }
@@ -338,78 +328,78 @@ body::before {
 
   <!-- Header -->
   <div class="header">
-    <div class="icon">🪙</div>
-    <h1>Пополнение баланса</h1>
-    <p>Больше монет — больше возможностей</p>
+    <div class="icon">🌟</div>
+    <h1>Поповнення балансу</h1>
+    <p>Більше зірок — більше можливостей</p>
   </div>
 
   <!-- Balance -->
   <div class="balance-bar">
-    <span class="label">Текущий баланс</span>
-    <span class="val" id="balanceVal">0 <span>монет</span></span>
+    <span class="label">Поточний баланс</span>
+    <span class="val" id="balanceVal">0 <span>🌟</span></span>
   </div>
 
   <!-- Packs -->
-  <div class="sec-label">Выберите пакет</div>
+  <div class="sec-label">Оберіть пакет</div>
   <div class="packs" id="packs">
 
-    <div class="pack active" data-id="pack_10" data-credits="10" data-stars="99">
+    <div class="pack active" data-id="pack_10" data-credits="10" data-stars="99" data-uah="54">
       <div class="radio-dot"></div>
       <div class="pack-info">
-        <div class="pack-name"><span class="coin-emoji">🪙</span> 10 монет</div>
-        <div class="pack-sub">~1 генерация фото</div>
+        <div class="pack-name"><span class="coin-emoji">🌟</span> 10 Зірок</div>
+        <div class="pack-sub">~1 генерація фото</div>
       </div>
       <div class="pack-price">
         <div class="stars">⭐ 99</div>
-        <div class="usd">~$1.30</div>
+        <div class="usd">~54 ₴</div>
       </div>
     </div>
 
-    <div class="pack popular" data-id="pack_25" data-credits="25" data-stars="229">
+    <div class="pack popular" data-id="pack_25" data-credits="25" data-stars="229" data-uah="124">
       <div class="radio-dot"></div>
       <div class="pack-info">
-        <div class="pack-name"><span class="coin-emoji">🪙</span> 25 монет</div>
-        <div class="pack-sub discount">Экономия 8%</div>
+        <div class="pack-name"><span class="coin-emoji">🌟</span> 25 Зірок</div>
+        <div class="pack-sub discount">Економія 8%</div>
       </div>
       <div class="pack-price">
         <div class="stars">⭐ 229</div>
-        <div class="usd">~$2.98</div>
+        <div class="usd">~124 ₴</div>
       </div>
     </div>
 
-    <div class="pack" data-id="pack_60" data-credits="60" data-stars="499">
+    <div class="pack" data-id="pack_60" data-credits="60" data-stars="499" data-uah="270">
       <div class="radio-dot"></div>
       <div class="pack-info">
-        <div class="pack-name"><span class="coin-emoji">🪙</span> 60 монет</div>
-        <div class="pack-sub discount">Экономия 16%</div>
+        <div class="pack-name"><span class="coin-emoji">🌟</span> 60 Зірок</div>
+        <div class="pack-sub discount">Економія 16%</div>
       </div>
       <div class="pack-price">
         <div class="stars">⭐ 499</div>
-        <div class="usd">~$6.49</div>
+        <div class="usd">~270 ₴</div>
       </div>
     </div>
 
-    <div class="pack" data-id="pack_150" data-credits="150" data-stars="1099">
+    <div class="pack" data-id="pack_150" data-credits="150" data-stars="1099" data-uah="595">
       <div class="radio-dot"></div>
       <div class="pack-info">
-        <div class="pack-name"><span class="coin-emoji">🪙</span> 150 монет</div>
-        <div class="pack-sub discount">Экономия 27%</div>
+        <div class="pack-name"><span class="coin-emoji">🌟</span> 150 Зірок</div>
+        <div class="pack-sub discount">Економія 27%</div>
       </div>
       <div class="pack-price">
         <div class="stars">⭐ 1099</div>
-        <div class="usd">~$14.29</div>
+        <div class="usd">~595 ₴</div>
       </div>
     </div>
 
   </div>
 
   <!-- Payment methods -->
-  <div class="sec-label">Способ оплаты</div>
+  <div class="sec-label">Спосіб оплати</div>
   <div class="methods">
     <div class="method active" data-method="stars">
       <span class="m-icon">⭐</span>
       <span class="m-name">Telegram Stars</span>
-      <span class="m-desc">Мгновенно</span>
+      <span class="m-desc">Миттєво</span>
     </div>
     <div class="method" data-method="crypto">
       <span class="m-icon">💎</span>
@@ -422,102 +412,121 @@ body::before {
   <label class="terms-row" id="termsRow">
     <div class="custom-check" id="checkBox"></div>
     <span class="terms-text">
-      Я принимаю <a href="#">условия использования</a> и подтверждаю, что мне исполнилось 18 лет
+      Я приймаю <a href="#">умови використання</a> та підтверджую, що мені виповнилось 18 років
     </span>
   </label>
 
   <!-- Pay button -->
-  <button class="pay-btn" id="payBtn" disabled>Оплатить</button>
+  <button class="pay-btn" id="payBtn" disabled>Оплатити</button>
 
 </div>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+if (tg) { tg.ready(); tg.expand(); }
 
-// Подставляем баланс из параметров URL (?balance=42)
+// Баланс з URL (?balance=42)
 const urlParams = new URLSearchParams(window.location.search);
-const balance = urlParams.get('balance') || '0';
-document.getElementById('balanceVal').innerHTML = `${balance} <span>монет</span>`;
+document.getElementById('balanceVal').innerHTML =
+  `${urlParams.get('balance') || '0'} <span>🌟</span>`;
 
-// Состояние — первый пакет выбран по умолчанию
-let selectedPack = { id: 'pack_10', credits: '10', stars: '99' };
+// ── Стан ──────────────────────────────────────────────────────────────────────
+const firstPack = document.querySelector('.pack');
+let selectedPack = {
+  id:      firstPack.dataset.id,
+  credits: firstPack.dataset.credits,
+  stars:   firstPack.dataset.stars,
+  uah:     firstPack.dataset.uah,
+};
 let selectedMethod = 'stars';
 let agreed = false;
 
-// Пакеты
+// ── Пакети ────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.pack').forEach(p => {
-  p.onclick = () => {
+  p.addEventListener('click', () => {
     document.querySelectorAll('.pack').forEach(x => x.classList.remove('active'));
     p.classList.add('active');
-    selectedPack = { id: p.dataset.id, credits: p.dataset.credits, stars: p.dataset.stars };
+    selectedPack = {
+      id:      p.dataset.id,
+      credits: p.dataset.credits,
+      stars:   p.dataset.stars,
+      uah:     p.dataset.uah,
+    };
     updateBtn();
-  };
+  });
 });
 
-// Методы оплаты
+// ── Методи оплати ─────────────────────────────────────────────────────────────
 document.querySelectorAll('.method').forEach(m => {
-  m.onclick = () => {
+  m.addEventListener('click', () => {
     document.querySelectorAll('.method').forEach(x => x.classList.remove('active'));
     m.classList.add('active');
     selectedMethod = m.dataset.method;
     updateBtn();
-  };
+  });
 });
 
-// Чекбокс
-document.getElementById('termsRow').onclick = () => {
+// ── Чекбокс ───────────────────────────────────────────────────────────────────
+document.getElementById('termsRow').addEventListener('click', (e) => {
+  if (e.target.tagName === 'A') return;
   agreed = !agreed;
-  const box = document.getElementById('checkBox');
-  box.classList.toggle('checked', agreed);
+  document.getElementById('checkBox').classList.toggle('checked', agreed);
   updateBtn();
-};
+});
 
-// Кнопка оплаты
+// ── Оновлення кнопки ──────────────────────────────────────────────────────────
 function updateBtn() {
   const btn = document.getElementById('payBtn');
-  const ready = agreed;  // пакет всегда выбран
-  btn.disabled = !ready;
-  if (ready) {
-    const label = selectedMethod === 'stars'
-      ? `Оплатить ⭐ ${selectedPack.stars}`
-      : `Оплатить 💎 USDT`;
-    btn.textContent = label;
+  btn.disabled = !agreed;
+  if (agreed) {
+    if (selectedMethod === 'stars') {
+      btn.textContent = `Оплатити ⭐ ${selectedPack.stars} Stars (~${selectedPack.uah} ₴)`;
+    } else {
+      btn.textContent = `Оплатити 💎 USDT`;
+    }
   } else {
-    btn.textContent = 'Оплатить';
+    btn.textContent = 'Оплатити';
   }
 }
 
-document.getElementById('payBtn').onclick = () => {
-  if (!selectedPack || !agreed) return;
+// ── Натискання Оплатити ───────────────────────────────────────────────────────
+document.getElementById('payBtn').addEventListener('click', () => {
+  if (!agreed) return;
 
   const btn = document.getElementById('payBtn');
   btn.classList.add('loading');
   btn.disabled = true;
 
-  // Отправляем данные боту — бот получит это в web_app_data handler
-  const data = JSON.stringify({
-    action: 'topup',
+  const payload = JSON.stringify({
+    action:  'topup',
     pack_id: selectedPack.id,
-    method: selectedMethod,
+    method:  selectedMethod,
     credits: selectedPack.credits,
-    stars: selectedPack.stars,
+    stars:   selectedPack.stars,
   });
 
-  tg.sendData(data);
-};
+  if (tg && tg.sendData) {
+    try {
+      tg.sendData(payload);
+    } catch(e) {
+      console.error('sendData error:', e);
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      alert('Помилка. Відкрийте через Telegram бота.');
+    }
+  } else {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    alert('Тест: ' + payload + '\n\nУ Telegram боті тут прийде інвойс на оплату.');
+  }
+});
 
-// Инициализация
-updateBtn();
-
-// Установить тему под Telegram
-if (tg.colorScheme === 'light') {
+// ── Тема ──────────────────────────────────────────────────────────────────────
+if (tg && tg.colorScheme === 'light') {
   document.documentElement.style.setProperty('--bg', '#f5f5f7');
   document.documentElement.style.setProperty('--surface', '#ffffff');
   document.documentElement.style.setProperty('--text', '#1a1a2e');
   document.documentElement.style.setProperty('--muted', '#888');
-  document.documentElement.style.setProperty('--surface2', '#ebebef');
 }
 </script>
 </body>
